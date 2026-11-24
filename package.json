@@ -1,0 +1,75 @@
+{
+  "name": "@oak-some/special-kms",
+  "license": "MIT",
+  "version": "1.0.18",
+  "private": false,
+  "description": "A reusable KMS models configurator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oak-some/special-kms.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "react-scripts start",
+    "build:app": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "rollup": "rollup -c --bundleConfigAsCjs"
+  },
+  "dependencies": {
+    "@mui/icons-material": "^7.3.7",
+    "web-vitals": ">=5.1.0"
+  },
+  "peerDependencies": {
+    "@emotion/react": ">=11.0.0",
+    "@emotion/styled": ">=11.0.0",
+    "@mui/material": ">=5.0.0",
+    "@react-spring/three": ">=10.0.3",
+    "@react-three/csg": ">=4.0.0",
+    "@react-three/drei": ">=9.0.0",
+    "@react-three/fiber": ">=8.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "three": ">=0.160.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.28.4",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.8",
+    "@rollup/plugin-node-resolve": "^15.3.1",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/three": "0.175.0",
+    "react-scripts": "5.0.1",
+    "rollup": "^4.52.4",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "typescript": "^4.9.5"
+  },
+  "overrides": {
+    "@types/three": "0.175.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
