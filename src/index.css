@@ -1,0 +1,57 @@
+/* Global layout foundations for the Article Models showcase.
+   Mirrors the Zoning Studio arrangement logic: a fluid shell, and below the
+   shared 1080px breakpoint the app switches from overlay panels on a
+   full-height stage to a stacked flow (stage on top, controls below in one
+   scrollable column). The breakpoint switch itself lives in App.tsx /
+   Interface.tsx via useMediaQuery('(max-width:1080px)'). */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+#root {
+  /* Dynamic viewport height so the shell tracks the *visible* viewport on
+     mobile browsers (URL bar shown/hidden); falls back to 100% above. */
+  height: 100dvh;
+}
+
+body {
+  margin: 0;
+  overscroll-behavior: none;
+}
+
+/* The R3F canvas must own its touch gestures (orbit / pinch zoom) instead of
+   the browser turning them into page scrolls. three's OrbitControls sets
+   touch-action:none on its dom element too — this is belt and braces. */
+canvas {
+  touch-action: none;
+  display: block;
+}
+
+/* ---- Mobile tap targets (same 1080px breakpoint as the layout switch) ---- */
+@media (max-width: 1080px) {
+  /* MUI's small sliders have ~16px thumbs — enlarge the thumb and the
+     hit area so dimension sliders are comfortably draggable by thumb. */
+  .MuiSlider-thumb {
+    width: 22px;
+    height: 22px;
+  }
+  .MuiSlider-root {
+    padding: 16px 0;
+  }
+
+  /* Toggle buttons and list rows get proper ~40-44px touch heights. */
+  .MuiToggleButton-root {
+    min-height: 40px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+  .MuiListItemButton-root {
+    min-height: 44px;
+  }
+  .MuiIconButton-root {
+    padding: 10px;
+  }
+}

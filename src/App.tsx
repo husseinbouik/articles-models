@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { useMediaQuery } from "@mui/material";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import SpecialKms from "./lib/components/SpecialKms.tsx";
 import { Interface } from "./lib/components/Interface.tsx";
@@ -145,8 +146,11 @@ function Scene() {
 
 // Showcase header bar — slim full-width top bar (the family look: deep wood,
 // amber accent; distinct from Zoning Studio's rail and Article Designer's
-// floating card). Purely presentational.
+// floating card). Purely presentational. On narrow screens it compacts:
+// the tagline and author name drop out so the title + Showcase pill never
+// crowd or overflow the bar.
 function Header() {
+  const compact = useMediaQuery("(max-width:600px)");
   return (
     <header
       style={{
@@ -154,8 +158,8 @@ function Header() {
         flexShrink: 0,
         display: "flex",
         alignItems: "center",
-        gap: 14,
-        padding: "0 18px",
+        gap: compact ? 10 : 14,
+        padding: compact ? "0 12px" : "0 18px",
         background: "#211a14",
         borderBottom: "1px solid #3a2d20",
         color: "#f2e9dc",
@@ -172,21 +176,25 @@ function Header() {
         <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", whiteSpace: "nowrap" }}>
           Article Models
         </div>
-        <div
-          style={{
-            fontSize: 9.5,
-            fontWeight: 600,
-            textTransform: "uppercase",
-            letterSpacing: "0.22em",
-            color: "#e0a458",
-            whiteSpace: "nowrap",
-          }}
-        >
-          Parametric Door &amp; Panel Configurator
-        </div>
+        {!compact && (
+          <div
+            style={{
+              fontSize: 9.5,
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.22em",
+              color: "#e0a458",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Parametric Door &amp; Panel Configurator
+          </div>
+        )}
       </div>
       <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
-        <span style={{ fontSize: 13, color: "#b8a88f", whiteSpace: "nowrap" }}>by Hussein Bouik</span>
+        {!compact && (
+          <span style={{ fontSize: 13, color: "#b8a88f", whiteSpace: "nowrap" }}>by Hussein Bouik</span>
+        )}
         <span
           style={{
             fontSize: 10,
@@ -208,6 +216,71 @@ function Header() {
 }
 
 function App() {
+  // Same stacking breakpoint as Zoning Studio (1080px): above it the
+  // configurator panels overlay a full-height 3D stage; at or below it the
+  // layout stacks — stage on top at a fixed share of the viewport, controls
+  // in a single scrollable column below (Interface renders its panels
+  // statically, in flow, when this same query matches).
+  const stacked = useMediaQuery("(max-width:1080px)");
+
+  const canvas = (
+    <Canvas
+      camera={{ position: [0, 0, 300], fov: 50 }}
+      shadows="percentage"
+      // Only render when something actually changes (prop change, OrbitControls
+      // drag) instead of 60fps forever on a static scene. OrbitControls calls
+      // invalidate() on move, so interaction still renders. Huge win on weak GPUs.
+      frameloop="demand"
+      // Cap render resolution at 2x so HiDPI/4K displays don't pay 4–9x the
+      // fragment cost. Visually identical, far cheaper to shade.
+      dpr={[1, 2]}
+      gl={{ powerPreference: "high-performance", antialias: true }}
+    >
+      {/* Deep-wood studio backdrop for the 3D stage */}
+      <color attach="background" args={["#17120d"]} />
+      <SceneEnvironment />
+      <Scene />
+    </Canvas>
+  );
+
+  if (stacked) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Header />
+        {/* 3D stage: prominent, fixed share of the viewport. R3F resizes the
+            canvas to this box automatically (ResizeObserver). */}
+        <div style={{ position: "relative", flex: "0 0 46%", minHeight: 300 }}>
+          {canvas}
+        </div>
+        {/* Controls: one tidy scrollable column under the stage — Door
+            Configurator first, Handler Configurator second (Interface sets
+            the order). No nested full-height panels, no overlap. */}
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            padding: 12,
+            boxSizing: "border-box",
+          }}
+        >
+          <Interface />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -220,24 +293,8 @@ function App() {
     >
       <Header />
       <div style={{ position: "relative", flex: 1, minHeight: 0 }}>
-      <Canvas
-        camera={{ position: [0, 0, 300], fov: 50 }}
-        shadows="percentage"
-        // Only render when something actually changes (prop change, OrbitControls
-        // drag) instead of 60fps forever on a static scene. OrbitControls calls
-        // invalidate() on move, so interaction still renders. Huge win on weak GPUs.
-        frameloop="demand"
-        // Cap render resolution at 2x so HiDPI/4K displays don't pay 4–9x the
-        // fragment cost. Visually identical, far cheaper to shade.
-        dpr={[1, 2]}
-        gl={{ powerPreference: "high-performance", antialias: true }}
-      >
-        {/* Deep-wood studio backdrop for the 3D stage */}
-        <color attach="background" args={["#17120d"]} />
-        <SceneEnvironment />
-        <Scene />
-      </Canvas>
-      <Interface />
+        {canvas}
+        <Interface />
       </div>
     </div>
   );

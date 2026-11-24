@@ -15,6 +15,7 @@ import {
   TextField,
   IconButton,
   Tooltip,
+  useMediaQuery,
 } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -81,9 +82,11 @@ const getFolderName = (key: string) => {
 const ModelSelection = ({
   doorConfig,
   onSelect,
+  stacked = false,
 }: {
   doorConfig: DoorConfig;
   onSelect: (event: SelectChangeEvent<string>) => void;
+  stacked?: boolean;
 }) => {
   const [expandedFolder, setExpandedFolder] = React.useState<string | null>(
     null,
@@ -127,7 +130,7 @@ const ModelSelection = ({
   );
 
   return (
-    <List dense sx={{ maxHeight: "400px", overflow: "auto" }}>
+    <List dense sx={{ maxHeight: stacked ? "300px" : "400px", overflow: "auto" }}>
       {sortedFolders.map(folder => {
         const isExpanded = expandedFolder === folder;
         const models = groupedModels[folder];
@@ -208,6 +211,12 @@ export const Interface = () => {
   } = useConfigurator();
 
   const { mode, toggleColorMode } = useColorMode();
+
+  // Stacked layout (≤1080px, same breakpoint as Zoning Studio and App.tsx):
+  // the two panels stop overlaying the 3D stage and instead flow as static
+  // blocks inside App's scrollable controls column — Door Configurator first
+  // (order 1), Handler Configurator second (order 2).
+  const stacked = useMediaQuery("(max-width:1080px)");
 
   // Inner panel state is derived from the single innerPanelMaterial value
   // rather than kept separately, so the UI cannot drift from what is rendered.
@@ -356,19 +365,33 @@ export const Interface = () => {
 
   return (
     <>
-      {/* LEFT PANEL - HANDLER CONFIGURATION */}
+      {/* LEFT PANEL - HANDLER CONFIGURATION (desktop: overlay on the stage;
+          stacked: second block in the controls column) */}
       {hasHandle && (
         <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "280px",
-            height: "100%",
-            overflowY: "auto",
-            p: 2,
-            boxSizing: "border-box",
-          }}
+          sx={
+            stacked
+              ? {
+                  position: "static",
+                  width: "100%",
+                  height: "auto",
+                  overflowY: "visible",
+                  p: 0,
+                  order: 2,
+                  boxSizing: "border-box",
+                  flexShrink: 0,
+                }
+              : {
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "280px",
+                  height: "100%",
+                  overflowY: "auto",
+                  p: 2,
+                  boxSizing: "border-box",
+                }
+          }
         >
           <Paper elevation={3} sx={{ p: 2 }}>
             <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
@@ -819,18 +842,32 @@ export const Interface = () => {
         </Box>
       )}
 
-      {/* RIGHT PANEL - DOOR CONFIGURATION */}
+      {/* RIGHT PANEL - DOOR CONFIGURATION (desktop: overlay on the stage;
+          stacked: first block in the controls column) */}
       <Box
-        sx={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          width: "360px",
-          height: "100%",
-          overflowY: "auto",
-          p: 2,
-          boxSizing: "border-box",
-        }}
+        sx={
+          stacked
+            ? {
+                position: "static",
+                width: "100%",
+                height: "auto",
+                overflowY: "visible",
+                p: 0,
+                order: 1,
+                boxSizing: "border-box",
+                flexShrink: 0,
+              }
+            : {
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "360px",
+                height: "100%",
+                overflowY: "auto",
+                p: 2,
+                boxSizing: "border-box",
+              }
+        }
       >
         <Stack spacing={3}>
           <Paper elevation={3} sx={{ p: 2 }}>
@@ -858,6 +895,7 @@ export const Interface = () => {
               <ModelSelection
                 doorConfig={doorConfig}
                 onSelect={handlePresetChange}
+                stacked={stacked}
               />
             </FormControl>
           </Paper>
