@@ -143,9 +143,83 @@ function Scene() {
   );
 }
 
+// Showcase header bar — slim full-width top bar (the family look: deep wood,
+// amber accent; distinct from Zoning Studio's rail and Article Designer's
+// floating card). Purely presentational.
+function Header() {
+  return (
+    <header
+      style={{
+        height: 58,
+        flexShrink: 0,
+        display: "flex",
+        alignItems: "center",
+        gap: 14,
+        padding: "0 18px",
+        background: "#211a14",
+        borderBottom: "1px solid #3a2d20",
+        color: "#f2e9dc",
+        zIndex: 10,
+      }}
+    >
+      {/* Brand mark: a door slab with a division line and knob dot */}
+      <svg width="26" height="34" viewBox="0 0 26 34" aria-hidden="true" style={{ flexShrink: 0 }}>
+        <rect x="1.5" y="1.5" width="23" height="31" rx="2.5" fill="none" stroke="#e0a458" strokeWidth="2" />
+        <line x1="13" y1="2" x2="13" y2="32" stroke="#e0a458" strokeWidth="1.4" opacity="0.65" />
+        <circle cx="20.5" cy="17" r="2.1" fill="#e0a458" />
+      </svg>
+      <div style={{ minWidth: 0, lineHeight: 1.2 }}>
+        <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: "0.01em", whiteSpace: "nowrap" }}>
+          Article Models
+        </div>
+        <div
+          style={{
+            fontSize: 9.5,
+            fontWeight: 600,
+            textTransform: "uppercase",
+            letterSpacing: "0.22em",
+            color: "#e0a458",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Parametric Door &amp; Panel Configurator
+        </div>
+      </div>
+      <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+        <span style={{ fontSize: 13, color: "#b8a88f", whiteSpace: "nowrap" }}>by Hussein Bouik</span>
+        <span
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.14em",
+            color: "#241708",
+            background: "#e0a458",
+            borderRadius: 999,
+            padding: "4px 10px",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Showcase
+        </span>
+      </div>
+    </header>
+  );
+}
+
 function App() {
   return (
-    <div style={{ width: "100vw", height: "100vh", overflow: "hidden" }}>
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Header />
+      <div style={{ position: "relative", flex: 1, minHeight: 0 }}>
       <Canvas
         camera={{ position: [0, 0, 300], fov: 50 }}
         shadows="percentage"
@@ -158,10 +232,13 @@ function App() {
         dpr={[1, 2]}
         gl={{ powerPreference: "high-performance", antialias: true }}
       >
+        {/* Deep-wood studio backdrop for the 3D stage */}
+        <color attach="background" args={["#17120d"]} />
         <SceneEnvironment />
         <Scene />
       </Canvas>
       <Interface />
+      </div>
     </div>
   );
 }

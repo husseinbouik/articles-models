@@ -1,16 +1,9 @@
 {
-  "name": "@oak-some/special-kms",
+  "name": "articles-models",
   "license": "MIT",
   "version": "1.0.18",
   "private": false,
-  "description": "A reusable KMS models configurator",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/oak-some/special-kms.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
+  "description": "Parametric 3D door, panel and drawer configurator \u2014 React Three Fiber component library and interactive demo.",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -23,7 +16,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
-    "rollup": "rollup -c --bundleConfigAsCjs"
+    "rollup": "rollup -c --bundleConfigAsCjs",
+    "build:pages": "PUBLIC_URL=/articles-models DISABLE_ESLINT_PLUGIN=true react-scripts build"
   },
   "dependencies": {
     "@mui/icons-material": "^7.3.7",

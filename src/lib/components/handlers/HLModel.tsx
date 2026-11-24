@@ -77,4 +77,4 @@ export function HLModel({
 }
 
 // Preload the valid model
-useGLTF.preload("/models/handles/door_handler_demo.glb");
+useGLTF.preload(`${process.env.PUBLIC_URL}/models/handles/door_handler_demo.glb`);

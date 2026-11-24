@@ -878,7 +878,7 @@ export const ConfiguratorProvider = ({
   // State for HLModel
   const [hlModelHandle, setHLModelHandle] = useState<HLModelHandleType>({
     visible: true,
-    url: "/models/handles/door_handler_demo.glb",
+    url: `${process.env.PUBLIC_URL}/models/handles/door_handler_demo.glb`,
     verticalPosition: 0,
     horizontalOffset: 0,
     rotationY: 0,

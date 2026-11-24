@@ -372,7 +372,7 @@ export const Interface = () => {
         >
           <Paper elevation={3} sx={{ p: 2 }}>
             <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
-              Handler Confiurator
+              Handler Configurator
             </Typography>
 
             <FormControl fullWidth sx={{ mb: 3 }}>
@@ -741,7 +741,7 @@ export const Interface = () => {
                       }))
                     }
                   >
-                    <MenuItem value="/models/handles/door_handler_demo.glb">
+                    <MenuItem value={`${process.env.PUBLIC_URL}/models/handles/door_handler_demo.glb`}>
                       Door Handler Demo
                     </MenuItem>
                   </Select>
@@ -843,7 +843,7 @@ export const Interface = () => {
               }}
             >
               <Typography variant="h6" color="primary">
-                Doors Configurator
+                Door Configurator
               </Typography>
               <Tooltip
                 title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
