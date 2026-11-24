@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import SpecialKms from "./lib/components/SpecialKms.tsx";
 import { Interface } from "./lib/components/Interface.tsx";
 import { useConfigurator } from "./lib/context/DoorContext.tsx";
@@ -27,6 +28,34 @@ function useDoorMaterial() {
       map: texture,
     });
   }, [invalidate]);
+}
+
+// Gives the scene an image-based environment (three's RoomEnvironment,
+// generated locally with PMREM — no network HDR fetch). Without an
+// environment map, metallic PBR surfaces receive almost nothing from
+// ambient/directional lights alone and render nearly black — this is what
+// made the GLB door knob (HLModel) look invisible: its Sketchfab material
+// is metal (metallic ≈ 1 via its metallicRoughness texture), so it had
+// nothing to reflect. With an env map it shades as the chrome/metal it is.
+function SceneEnvironment() {
+  const gl = useThree(s => s.gl);
+  const scene = useThree(s => s.scene);
+  const invalidate = useThree(s => s.invalidate);
+
+  React.useEffect(() => {
+    const pmrem = new THREE.PMREMGenerator(gl);
+    const renderTarget = pmrem.fromScene(new RoomEnvironment(), 0.04);
+    scene.environment = renderTarget.texture;
+    // frameloop="demand": request a frame so the new lighting is drawn.
+    invalidate();
+    return () => {
+      scene.environment = null;
+      renderTarget.dispose();
+      pmrem.dispose();
+    };
+  }, [gl, scene, invalidate]);
+
+  return null;
 }
 
 // Scene contents live in their own component so they can call useThree() hooks
@@ -129,6 +158,7 @@ function App() {
         dpr={[1, 2]}
         gl={{ powerPreference: "high-performance", antialias: true }}
       >
+        <SceneEnvironment />
         <Scene />
       </Canvas>
       <Interface />
