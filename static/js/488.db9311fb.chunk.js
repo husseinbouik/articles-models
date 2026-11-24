@@ -1,0 +1,2 @@
+"use strict";(Array.isArray(globalThis.webpackChunkarticles_models)?globalThis.webpackChunkarticles_models:globalThis.webpackChunkarticles_models=[]).push([[488],{488(){new Set,new WeakMap}}]);
+//# sourceMappingURL=488.db9311fb.chunk.js.map
